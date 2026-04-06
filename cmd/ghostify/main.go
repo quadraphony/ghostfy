@@ -12,6 +12,7 @@ import (
 	"github.com/quadraphony/ghostfy/internal/app"
 	"github.com/quadraphony/ghostfy/internal/bridge/openvpn"
 	"github.com/quadraphony/ghostfy/internal/bridge/ssh"
+	"github.com/quadraphony/ghostfy/internal/bridge/udp2raw"
 	"github.com/quadraphony/ghostfy/internal/runtime"
 )
 
@@ -24,7 +25,7 @@ func main() {
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, openvpn-bridge, ssh-bridge, protocols")
+		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, openvpn-bridge, ssh-bridge, udp2raw-bridge, protocols")
 	}
 
 	switch args[0] {
@@ -81,6 +82,18 @@ func run(args []string) error {
 			return err
 		}
 		runner := ssh.NewRunner(os.Stdout, os.Stderr)
+		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer stop()
+		return runner.Run(ctx, cfg)
+	case "udp2raw-bridge":
+		if len(args) != 3 || args[1] != "-c" {
+			return errors.New(`usage: ghostify udp2raw-bridge -c <config.json>`)
+		}
+		cfg, err := udp2raw.Load(args[2])
+		if err != nil {
+			return err
+		}
+		runner := udp2raw.NewRunner(os.Stdout, os.Stderr)
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 		defer stop()
 		return runner.Run(ctx, cfg)

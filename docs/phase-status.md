@@ -14,6 +14,7 @@
 - Added `trojan` protocol adapter and importer
 - Phase 8 started: OpenVPN bridge runner and documentation
 - SSH bridge runner added and documented
+- UDP2RAW bridge runner added
 
 ## Deferred by Design
 
