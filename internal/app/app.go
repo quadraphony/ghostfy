@@ -8,11 +8,13 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/quadraphony/ghostfy/internal/adapters/singbox"
 	"github.com/quadraphony/ghostfy/internal/config"
 	"github.com/quadraphony/ghostfy/internal/importers"
 	"github.com/quadraphony/ghostfy/internal/logging"
+	"github.com/quadraphony/ghostfy/internal/observability"
 	"github.com/quadraphony/ghostfy/internal/runtime"
 )
 
@@ -56,6 +58,7 @@ func (a *App) Run(configPath string, stdout, stderr *os.File) error {
 	defer stop()
 
 	if err := manager.Start(ctx, runtimeConfigPath); err != nil {
+		observability.Default.Record("run-error")
 		return err
 	}
 
@@ -68,6 +71,7 @@ func (a *App) Run(configPath string, stdout, stderr *os.File) error {
 
 	<-ctx.Done()
 	log.Log("info", "shutdown signal received", map[string]any{"signal": ctx.Err().Error()})
+	observability.Default.Record("run-success")
 	return manager.Stop()
 }
 
@@ -110,6 +114,37 @@ func (a *App) ListProtocols() []map[string]string {
 		})
 	}
 	return out
+}
+
+func (a *App) HealthCheck(configPath string, out io.Writer) error {
+	log := logging.New(out)
+	cfg, err := config.Load(configPath)
+	if err != nil {
+		return err
+	}
+
+	singboxConfig, err := a.mapper.Build(cfg)
+	if err != nil {
+		return err
+	}
+
+	runtimeConfigPath, err := writeRuntimeConfig(singboxConfig)
+	if err != nil {
+		return err
+	}
+	defer os.Remove(runtimeConfigPath)
+
+	manager := runtime.NewManager(out, out, log)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := manager.Start(ctx, runtimeConfigPath); err != nil {
+		observability.Default.Record("health-error")
+		return err
+	}
+
+	observability.Default.Record("health-success")
+	return manager.Stop()
 }
 
 func writeRuntimeConfig(data map[string]any) (string, error) {

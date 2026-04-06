@@ -16,6 +16,9 @@
 - SSH bridge runner added and documented
 - UDP2RAW bridge runner added
 - Bridge registry command exposes available bridges
+- Phase 9 (observability) delivered via `health`, `status`, metrics documentation
+- Phase 10 (packaging) kickoff with `scripts/build.sh` + packaging notes
+- Bridge registry command exposes available bridges
 
 ## Deferred by Design
 

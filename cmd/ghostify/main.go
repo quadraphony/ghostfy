@@ -14,6 +14,7 @@ import (
 	"github.com/quadraphony/ghostfy/internal/bridge/openvpn"
 	"github.com/quadraphony/ghostfy/internal/bridge/ssh"
 	"github.com/quadraphony/ghostfy/internal/bridge/udp2raw"
+	"github.com/quadraphony/ghostfy/internal/observability"
 	"github.com/quadraphony/ghostfy/internal/runtime"
 )
 
@@ -26,7 +27,7 @@ func main() {
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, openvpn-bridge, ssh-bridge, udp2raw-bridge, bridges, protocols")
+		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, health, status, openvpn-bridge, ssh-bridge, udp2raw-bridge, bridges, protocols")
 	}
 
 	switch args[0] {
@@ -60,6 +61,23 @@ func run(args []string) error {
 			return errors.New("usage: ghostify protocols")
 		}
 		return printProtocols()
+	case "health":
+		if len(args) != 3 || args[1] != "-c" {
+			return errors.New(`usage: ghostify health -c <ghostify.json>`)
+		}
+		return app.New().HealthCheck(args[2], os.Stdout)
+	case "status":
+		if len(args) != 1 {
+			return errors.New("usage: ghostify status")
+		}
+		status := map[string]any{
+			"metrics":   observability.Default.Snapshot(),
+			"protocols": app.New().ListProtocols(),
+			"bridges":   bridge.Default().List(),
+		}
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(status)
 	case "openvpn-bridge":
 		if len(args) != 3 || args[1] != "-c" {
 			return errors.New(`usage: ghostify openvpn-bridge -c <config.json>`)
