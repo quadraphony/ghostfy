@@ -15,6 +15,7 @@
 - Phase 8 started: OpenVPN bridge runner and documentation
 - SSH bridge runner added and documented
 - UDP2RAW bridge runner added
+- Bridge registry command exposes available bridges
 
 ## Deferred by Design
 
