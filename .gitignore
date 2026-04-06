@@ -9,6 +9,7 @@ bin/
 dist/
 build/
 coverage/
+release/
 *.out
 *.test
 

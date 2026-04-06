@@ -1,6 +1,7 @@
 # Packaging
 
 Run `scripts/build.sh` to produce Linux and Windows binaries under `build/` plus `build/version.json`.
+Run `scripts/release.sh` to generate versioned tar/zip bundles under `release/`.
 
 ```
 ./scripts/build.sh
