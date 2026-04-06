@@ -1,0 +1,27 @@
+{
+  "profile": "vless-reality",
+  "log_level": "info",
+  "inbound": {
+    "type": "mixed",
+    "listen": "127.0.0.1",
+    "port": 1080
+  },
+  "outbound": {
+    "type": "vless",
+    "server": "51.68.155.153",
+    "port": 443,
+    "uuid": "43488128-319e-f480-64ea-0acdc712e2a8",
+    "flow": "xtls-rprx-vision",
+    "network": "tcp",
+    "tls": {
+      "enabled": true,
+      "server_name": "www.allegro.pl",
+      "reality": {
+        "enabled": true,
+        "public_key": "_xzl59bcUYD9QUSKFyboqCC_9eUnaXUUKWA19oQWFHU",
+        "short_id": "8d17b7ebab7b99d7",
+        "fingerprint": "chrome"
+      }
+    }
+  }
+}

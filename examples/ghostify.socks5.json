@@ -1,0 +1,15 @@
+{
+  "profile": "local-socks5",
+  "log_level": "info",
+  "inbound": {
+    "type": "mixed",
+    "listen": "127.0.0.1",
+    "port": 1080
+  },
+  "outbound": {
+    "type": "socks5",
+    "server": "127.0.0.1",
+    "port": 2080,
+    "version": "5"
+  }
+}

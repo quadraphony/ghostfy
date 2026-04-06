@@ -1,0 +1,27 @@
+{
+  "profile": "local-vmess",
+  "log_level": "info",
+  "inbound": {
+    "type": "mixed",
+    "listen": "127.0.0.1",
+    "port": 1080
+  },
+  "outbound": {
+    "type": "vmess",
+    "server": "example.com",
+    "port": 443,
+    "uuid": "43488128-319e-f480-64ea-0acdc712e2a8",
+    "alter_id": 0,
+    "security": "auto",
+    "network": "tcp",
+    "transport": {
+      "type": "tcp",
+      "path": "/",
+      "host": "www.example.com"
+    },
+    "tls": {
+      "enabled": true,
+      "server_name": "www.example.com"
+    }
+  }
+}
