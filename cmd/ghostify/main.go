@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -27,7 +28,7 @@ func main() {
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, health, status, openvpn-bridge, ssh-bridge, udp2raw-bridge, bridges, protocols")
+		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, health, status, status-server, openvpn-bridge, ssh-bridge, udp2raw-bridge, bridges, protocols")
 	}
 
 	switch args[0] {
@@ -123,6 +124,14 @@ func run(args []string) error {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
 		return enc.Encode(bridge.Default().List())
+	case "status-server":
+		fs := flag.NewFlagSet("status-server", flag.ExitOnError)
+		addr := fs.String("addr", "127.0.0.1:9111", "listen address")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		server := &observability.Server{Addr: *addr}
+		return server.ListenAndServe()
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
