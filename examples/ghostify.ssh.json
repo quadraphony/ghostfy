@@ -1,0 +1,10 @@
+{
+  "profile": "ssh-bridge",
+  "log_level": "info",
+  "connection": "user@51.68.155.153 -p 22",
+  "args": [
+    "-N",
+    "-L",
+    "1080:127.0.0.1:1080"
+  ]
+}

@@ -13,6 +13,7 @@
 - Added `vmess` protocol adapter and importer
 - Added `trojan` protocol adapter and importer
 - Phase 8 started: OpenVPN bridge runner and documentation
+- SSH bridge runner added and documented
 
 ## Deferred by Design
 
