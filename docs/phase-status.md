@@ -12,6 +12,7 @@
 - URI import foundation for `vless://`
 - Added `vmess` protocol adapter and importer
 - Added `trojan` protocol adapter and importer
+- Phase 8 started: OpenVPN bridge runner and documentation
 
 ## Deferred by Design
 

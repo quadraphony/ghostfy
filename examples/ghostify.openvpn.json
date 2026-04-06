@@ -1,0 +1,9 @@
+{
+  "profile": "openvpn-bridge",
+  "log_level": "info",
+  "openvpn_config": "/etc/openvpn/client.conf",
+  "args": [
+    "--verb",
+    "3"
+  ]
+}

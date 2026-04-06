@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/quadraphony/ghostfy/internal/app"
+	"github.com/quadraphony/ghostfy/internal/bridge/openvpn"
 	"github.com/quadraphony/ghostfy/internal/runtime"
 )
 
@@ -22,7 +23,7 @@ func main() {
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, protocols")
+		return errors.New("expected a command; available: run-singbox-test, run, render, import-uri, openvpn-bridge, protocols")
 	}
 
 	switch args[0] {
@@ -56,6 +57,20 @@ func run(args []string) error {
 			return errors.New("usage: ghostify protocols")
 		}
 		return printProtocols()
+	case "openvpn-bridge":
+		if len(args) != 3 || args[1] != "-c" {
+			return errors.New(`usage: ghostify openvpn-bridge -c <config.json>`)
+		}
+		cfg, err := openvpn.Load(args[2])
+		if err != nil {
+			return err
+		}
+
+		runner := openvpn.NewRunner(os.Stdout, os.Stderr)
+		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer stop()
+
+		return runner.Run(ctx, cfg)
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
