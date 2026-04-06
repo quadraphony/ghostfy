@@ -16,6 +16,7 @@
 - SSH bridge runner added and documented
 - UDP2RAW bridge runner added
 - Bridge registry command exposes available bridges
+- TrustTunnel protocol placeholder added to registry and mapper
 - Phase 9 (observability) delivered via `health`, `status`, metrics documentation
 - Phase 10 (packaging) kickoff with `scripts/build.sh` + packaging notes
 - Bridge registry command exposes available bridges

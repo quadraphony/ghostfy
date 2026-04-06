@@ -202,6 +202,14 @@ func (c Config) Validate() error {
 			return errors.New("tls.enabled must be true for secure trojan")
 		}
 		return nil
+	case "trusttunnel":
+		if c.Outbound.Server == "" {
+			return errors.New("outbound.server is required for trusttunnel")
+		}
+		if c.Outbound.Port < 1 || c.Outbound.Port > 65535 {
+			return fmt.Errorf("outbound.port must be between 1 and 65535")
+		}
+		return nil
 	default:
 		return fmt.Errorf("unsupported outbound.type %q", c.Outbound.Type)
 	}

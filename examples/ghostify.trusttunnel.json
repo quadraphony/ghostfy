@@ -1,0 +1,16 @@
+{
+  "profile": "trusttunnel",
+  "log_level": "info",
+  "inbound": {
+    "type": "mixed",
+    "listen": "127.0.0.1",
+    "port": 1080
+  },
+  "outbound": {
+    "type": "trusttunnel",
+    "server": "51.68.155.153",
+    "port": 443,
+    "password": "password",
+    "flow": "relay"
+  }
+}
